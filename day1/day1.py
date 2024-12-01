@@ -12,7 +12,7 @@ req = request.Request(
 )
 
 response = request.urlopen(req)
-lines = response.read().decode('utf-8').strip().splitlines()  # Read and buffer once
+lines = response.read().decode('utf-8').strip().splitlines()
 
 
 def parse_data(data):
