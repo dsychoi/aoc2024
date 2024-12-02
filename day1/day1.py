@@ -14,7 +14,6 @@ req = request.Request(
 response = request.urlopen(req)
 lines = response.read().decode('utf-8').strip().splitlines()
 
-
 def parse_data(data):
     left_list = []
     right_list = []
