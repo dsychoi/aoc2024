@@ -15,35 +15,31 @@ parsed_data = parse_data(raw_data)
 
 
 def scan_corrupted_memory(memory):
-    pattern = r"mul\(\d+,\d+\)"
+    pattern = r"mul\((\d+),(\d+)\)"
     total = 0
 
-    matches = re.findall(pattern, memory)
-    for match in matches:
-        numbers = match.split('(')[1].split(')')[0]
-        left_number, right_number = numbers.split(',')
+    for match in re.finditer(pattern, memory):
+        left_number, right_number = int(match.group(1)), int(match.group(2))
         product = int(left_number) * int(right_number)
         total += product
     return total
 
 
 def scan_conditional_corrupted_memory(memory):
-    pattern = r"mul\(\d+,\d+\)|don't\(\)|do\(\)"
+    pattern = r"mul\((\d+),(\d+)\)|don't\(\)|do\(\)"
     total = 0
     skip = False
 
-    matches = re.findall(pattern, memory)
-    for match in matches:
-        if match.startswith("mul"):
-            numbers = match.split('(')[1].split(')')[0]
-            left_number, right_number = numbers.split(',')
-            product = int(left_number) * int(right_number)
+    for match in re.finditer(pattern, memory):
+        if match.group(0).startswith("mul"):
+            left_number, right_number = int(match.group(1)), int(match.group(2))
             if not skip:
-                total += product
-        elif match == "don't()":
+                total += left_number * right_number
+        elif match.group(0) == "don't()":
             skip = True
-        elif match == "do()":
+        elif match.group(0) == "do()":
             skip = False
+
     return total
 
 
