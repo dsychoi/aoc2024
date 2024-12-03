@@ -1,18 +1,6 @@
 from collections import Counter
-from urllib import request
-import os
-from dotenv import load_dotenv
+from utils import fetch_data
 
-load_dotenv()
-
-url = 'https://adventofcode.com/2024/day/1/input'
-token = os.getenv('aoc_token')
-req = request.Request(
-    url, headers={'Cookie': f'session={token}'}
-)
-
-response = request.urlopen(req)
-lines = response.read().decode('utf-8').strip().splitlines()
 
 def parse_data(data):
     left_list = []
@@ -40,5 +28,7 @@ def get_similarity(data):
     return similarity
 
 
-print(get_distance(lines))
-print(get_similarity(lines))
+raw_data = fetch_data(1)
+
+print(get_distance(raw_data))
+print(get_similarity(raw_data))

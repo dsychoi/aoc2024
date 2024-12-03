@@ -1,17 +1,4 @@
-from urllib import request
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-url = 'https://adventofcode.com/2024/day/2/input'
-token = os.getenv('aoc_token')
-req = request.Request(
-    url, headers={'Cookie': f'session={token}'}
-)
-
-response = request.urlopen(req)
-lines = response.read().decode('utf-8').strip().splitlines()
+from utils import fetch_data
 
 
 def parse_data(data):
@@ -54,6 +41,8 @@ def get_safe_tolerant_reports(reports):
     return sum(1 for report in reports if is_safe_tolerant(report))
 
 
-print(get_safe_reports(parse_data(lines)))
-print(get_safe_tolerant_reports(parse_data(lines)))
+raw_data = fetch_data(2)
+
+print(get_safe_reports(parse_data(raw_data)))
+print(get_safe_tolerant_reports(parse_data(raw_data)))
 
