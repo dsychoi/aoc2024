@@ -43,7 +43,55 @@ def count_guard_positions(map):
             next_position = (next_row, next_column)
             stack.append((next_position, direction))
 
-    return len(visited)
+    return len(visited), visited
+
+
+def count_stuck_positions(map):
+    distance, guard_path = count_guard_positions(map)
+
+    map = [list(row) for row in map]
+    directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    total = 0
+    guard_position = (0, 0)
+
+    for row_number, row in enumerate(map):
+        for column_number, value in enumerate(row):
+            if value == '^':
+                guard_position = (row_number, column_number)
+
+    for row_number, row in enumerate(map):
+        for column_number, value in enumerate(row):
+            if value == '^' or value == '#':
+                continue
+
+            if (row_number, column_number) in guard_path:
+                visited = set()
+                map[row_number][column_number] = '#'
+
+                direction_index = 0
+                current_row, current_column = guard_position
+
+                while current_row in range(len(map)) and current_column in range(len(map[0])) and (
+                current_row, current_column, direction_index) not in visited:
+                    visited.add((current_row, current_column, direction_index))
+
+                    while True:
+                        current_direction = directions[direction_index]
+                        new_row, new_column = current_row + current_direction[0], current_column + current_direction[1]
+
+                        if new_row in range(len(map)) and new_column in range(len(map[0])) and map[new_row][
+                            new_column] == '#':
+                            direction_index = (direction_index + 1) % 4
+                        else:
+                            current_row, current_column = new_row, new_column
+                            break
+
+                if (current_row, current_column, direction_index) in visited:
+                    total += 1
+                map[row_number][column_number] = "."
+
+    return total
+
 
 map_data = [
     "....#.....",
@@ -59,4 +107,5 @@ map_data = [
 ]
 
 data = fetch_data(6)
-print(count_guard_positions(data))
+print(count_guard_positions(data)[0])
+print(count_stuck_positions(data))
