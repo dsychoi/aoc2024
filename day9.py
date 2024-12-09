@@ -73,14 +73,14 @@ def compact_puzzle_updated(puzzle_id):
                 for i in range(j):
                     if puzzle_id[i][1] == '.':
                         if puzzle_id[i][0] == puzzle_id[j][0] * len(str(puzzle_id[j][1])):
-                            puzzle_id[i], puzzle_id[j] = puzzle_id[j], (puzzle_id[j][0], '.')
-
+                            puzzle_id[i], puzzle_id[j] = puzzle_id[j], (len(str(puzzle_id[j][1]) * puzzle_id[j][0]), '.')
                             moved = True
                             break
                         elif puzzle_id[i][0] > puzzle_id[j][0] * len(str(puzzle_id[j][1])):
-                            puzzle_id[i] = (puzzle_id[i][0] - puzzle_id[j][0], puzzle_id[i][1])
+                            puzzle_id[i] = (puzzle_id[i][0] - (len(str(puzzle_id[j][1]) * puzzle_id[j][0])), puzzle_id[i][1])
+                            temp_j = puzzle_id[j]
                             puzzle_id.insert(i, puzzle_id[j])
-                            puzzle_id[j + 1] = (len(puzzle_id[j]), '.')
+                            puzzle_id[j + 1] = ((len(str(temp_j[1])) * temp_j[0]), '.')
 
                             moved = True
                             break
@@ -118,7 +118,7 @@ def unpack_list(list):
     return unpacked_list
 
 
-# puzzle = '2333133121414131402'
+# puzzle = '351632342'
 puzzle = fetch_data(9)[0]
 # puzzle_id = get_puzzle_id(puzzle)
 # print(puzzle_id)
@@ -127,11 +127,14 @@ puzzle = fetch_data(9)[0]
 # checksum = get_checksum(finished_puzzle)
 
 puzzle_id_updated = get_puzzle_id_updated(puzzle)
+print(len(''.join([str(i) for i in unpack_list(puzzle_id_updated)])))
 finished_puzzle_updated = compact_puzzle_updated(puzzle_id_updated)
-print(finished_puzzle_updated)
+print(len(''.join([str(i) for i in unpack_list(finished_puzzle_updated)])))
 checksum_updated = get_checksum(finished_puzzle_updated)
 # 6467287700366 too low
 # 14402909062923 too high
+# 13985513481853 not right
+# 14381147236629 not right
 
 # print(checksum)
 print(checksum_updated)
