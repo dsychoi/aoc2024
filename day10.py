@@ -55,6 +55,52 @@ def traverse_trail(map, start, visited):
             traverse_trail(map, (row, column + 1), visited)
 
 
+def find_unique_paths(grid):
+    def is_valid_move(current_row, current_column, next_row, next_column, visited):
+        if (next_row < 0 or next_row >= len(grid) or
+                next_column < 0 or next_column >= len(grid[0])):
+            return False
+
+        if grid[next_row][next_column] != grid[current_row][current_column] + 1:
+            return False
+
+        return (next_row, next_column) not in visited
+
+    def dfs(row, column, visited, path_length=1):
+        if grid[row][column] == 9:
+            return [(path_length, list(visited))]
+
+        unique_paths = []
+
+        moves = [
+            (row - 1, column),
+            (row + 1, column),
+            (row, column - 1),
+            (row, column + 1)
+        ]
+
+        for next_row, next_column in moves:
+            if is_valid_move(row, column, next_row, next_column, visited):
+                new_visited = visited.copy()
+                new_visited.add((next_row, next_column))
+
+                unique_paths.extend(
+                    dfs(next_row, next_column, new_visited, path_length + 1)
+                )
+
+        return unique_paths
+
+    all_unique_paths = []
+
+    for row_index, row in enumerate(grid):
+        for column_index, value in enumerate(row):
+            if value == 0:
+                visited = {(row_index, column_index)}
+                all_unique_paths.extend(
+                    dfs(row_index, column_index, visited)
+                )
+
+    return all_unique_paths
 
 data = fetch_data(10)
 # test_data = [
@@ -80,4 +126,6 @@ data = fetch_data(10)
 
 parsed_data = parse_data(data)
 result = score_trailheads(parsed_data)
+unique_paths = find_unique_paths(parsed_data)
 print(result)
+print(len(unique_paths))
