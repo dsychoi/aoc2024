@@ -19,12 +19,8 @@ def parse_data(data):
 
     result = []
     for line in lines:
-        a = line[0]
-        b = line[1]
-        c = line[2]
-        a_numbers = a.split(':')[1]
-        b_numbers = b.split(':')[1]
-        c_numbers = c.split(':')[1]
+        a, b, c = line[0], line[1], line[2]
+        a_numbers, b_numbers, c_numbers = a.split(':')[1], b.split(':')[1], c.split(':')[1]
         x, y, z = a_numbers.split(','), b_numbers.split(','), c_numbers.split(',')
         x1, x2 = x[0].split('+')[1], x[1].split('+')[1]
         y1, y2 = y[0].split('+')[1], y[1].split('+')[1]
